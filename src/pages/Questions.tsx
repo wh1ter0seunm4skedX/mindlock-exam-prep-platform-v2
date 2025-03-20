@@ -15,6 +15,9 @@ import {
   Tag,
   GraduationCap,
   Check,
+  Upload,
+  Image as ImageIcon,
+  List
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -45,7 +48,7 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
 import { useQuestions } from '@/hooks/useQuestions';
-import { Question, Course } from '@/types';
+import { Question, Course, COURSE_QUESTION_TYPES } from '@/types';
 
 const Questions = () => {
   const navigate = useNavigate();
@@ -420,9 +423,40 @@ const Questions = () => {
                     <GraduationCap size={16} />
                     <span>{course?.name || 'Unknown Course'}</span>
                   </div>
+                  
+                  {/* Show image if present */}
+                  {question.imageUrl && (
+                    <div className="mb-3 rounded-md overflow-hidden">
+                      <img 
+                        src={question.imageUrl} 
+                        alt={question.title} 
+                        className="w-full h-40 object-cover"
+                      />
+                    </div>
+                  )}
+                  
                   <p className="text-muted-foreground line-clamp-3 mb-4">
                     {question.content}
                   </p>
+                  
+                  {/* Question Types */}
+                  {question.questionTypes && question.questionTypes.length > 0 && (
+                    <div className="flex flex-wrap items-center gap-1 mb-2">
+                      <List size={14} className="text-muted-foreground mr-1" />
+                      <span className="text-xs text-muted-foreground mr-1">Types:</span>
+                      {question.questionTypes.slice(0, 1).map((type) => (
+                        <Badge key={type} variant="secondary" className="text-xs">
+                          {type}
+                        </Badge>
+                      ))}
+                      {question.questionTypes.length > 1 && (
+                        <Badge variant="outline" className="text-xs">
+                          +{question.questionTypes.length - 1} more
+                        </Badge>
+                      )}
+                    </div>
+                  )}
+                  
                   <div className="flex flex-wrap gap-2 mt-2">
                     {question.tags.slice(0, 3).map((tag) => (
                       <Badge key={tag} variant="outline" className="text-xs">
@@ -554,23 +588,40 @@ const AddQuestionDialog = ({
 }: AddQuestionDialogProps) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [solution, setSolution] = useState('');
   const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard' | 'expert'>('medium');
   const [courseId, setCourseId] = useState('');
   const [tags, setTags] = useState<string[]>([]);
+  const [questionTypes, setQuestionTypes] = useState<string[]>([]);
   const [newTag, setNewTag] = useState('');
   const [timeEstimate, setTimeEstimate] = useState('15');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [image, setImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [availableQuestionTypes, setAvailableQuestionTypes] = useState<string[]>([]);
+
+  // Update available question types when course changes
+  useEffect(() => {
+    if (courseId) {
+      const courseTypes = courses.find(c => c.id === courseId)?.questionTypes || [];
+      setAvailableQuestionTypes(courseTypes);
+    } else {
+      setAvailableQuestionTypes([]);
+    }
+    // Reset selected question types when changing course
+    setQuestionTypes([]);
+  }, [courseId, courses]);
 
   const resetForm = () => {
     setTitle('');
     setContent('');
-    setSolution('');
     setDifficulty('medium');
     setCourseId('');
     setTags([]);
+    setQuestionTypes([]);
     setNewTag('');
     setTimeEstimate('15');
+    setImage(null);
+    setImagePreview(null);
     setIsSubmitting(false);
   };
 
@@ -596,6 +647,31 @@ const AddQuestionDialog = ({
     );
   };
 
+  const handleToggleQuestionType = (type: string) => {
+    setQuestionTypes((prev) =>
+      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
+    );
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setImage(file);
+      
+      // Create a preview URL for the image
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setImage(null);
+    setImagePreview(null);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -607,14 +683,19 @@ const AddQuestionDialog = ({
     setIsSubmitting(true);
     
     try {
+      // In a real app, you would upload the image to a storage service
+      // Here we'll just use the data URL as the image URL for demonstration
+      const imageUrl = imagePreview;
+      
       const newQuestion = {
         title,
         content,
-        solution,
         difficulty,
         course: courseId,
         tags,
+        questionTypes,
         timeEstimate: parseInt(timeEstimate, 10) || 15,
+        imageUrl: imageUrl || undefined,
       };
       
       await onAddQuestion(newQuestion);
@@ -630,7 +711,7 @@ const AddQuestionDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Add New Question</DialogTitle>
           <DialogDescription>
@@ -664,6 +745,52 @@ const AddQuestionDialog = ({
               rows={5}
               required
             />
+          </div>
+          
+          {/* Image Upload */}
+          <div>
+            <Label htmlFor="image" className="mb-2 block">
+              Question Image (Optional)
+            </Label>
+            <div className="flex flex-col space-y-3">
+              <div className="flex items-center space-x-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => document.getElementById('image-upload')?.click()}
+                  className="w-full justify-center"
+                >
+                  <Upload size={16} className="mr-2" />
+                  Upload Image
+                </Button>
+                <Input
+                  id="image-upload"
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleImageChange}
+                />
+              </div>
+              
+              {imagePreview && (
+                <div className="relative border rounded-md overflow-hidden">
+                  <img 
+                    src={imagePreview} 
+                    alt="Preview" 
+                    className="w-full h-48 object-contain"
+                  />
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="sm"
+                    className="absolute top-2 right-2"
+                    onClick={handleRemoveImage}
+                  >
+                    <X size={16} />
+                  </Button>
+                </div>
+              )}
+            </div>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -705,6 +832,49 @@ const AddQuestionDialog = ({
               </Select>
             </div>
           </div>
+          
+          {/* Question Types */}
+          {availableQuestionTypes.length > 0 && (
+            <div>
+              <Label className="mb-2 block">
+                Question Types <span className="text-muted-foreground text-sm">(Select all that apply)</span>
+              </Label>
+              <div className="flex flex-wrap gap-2 mb-2">
+                {questionTypes.map((type) => (
+                  <Badge key={type} variant="secondary" className="px-2 py-1">
+                    {type}
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleToggleQuestionType(type)}
+                      className="h-auto p-0 ml-1"
+                    >
+                      <X size={14} />
+                    </Button>
+                  </Badge>
+                ))}
+              </div>
+              
+              <div className="border rounded-md p-3 max-h-[200px] overflow-y-auto space-y-2">
+                {availableQuestionTypes.map((type) => (
+                  <div key={type} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`type-${type}`}
+                      checked={questionTypes.includes(type)}
+                      onCheckedChange={() => handleToggleQuestionType(type)}
+                    />
+                    <label
+                      htmlFor={`type-${type}`}
+                      className="text-sm cursor-pointer"
+                    >
+                      {type}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
           
           <div>
             <Label htmlFor="tags" className="mb-2 block">
@@ -777,19 +947,6 @@ const AddQuestionDialog = ({
                 </div>
               </div>
             )}
-          </div>
-          
-          <div>
-            <Label htmlFor="solution" className="mb-2 block">
-              Solution (Optional)
-            </Label>
-            <Textarea
-              id="solution"
-              value={solution}
-              onChange={(e) => setSolution(e.target.value)}
-              placeholder="Add a solution or explanation..."
-              rows={4}
-            />
           </div>
           
           <div>

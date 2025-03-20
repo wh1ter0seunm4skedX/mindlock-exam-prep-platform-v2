@@ -1,19 +1,24 @@
 
 import { Suspense } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
 
 const Layout = () => {
+  const location = useLocation();
+  
+  // Check if we're in study mode to hide navbar and footer
+  const isStudyPage = location.pathname.startsWith('/study/');
+  
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
-      <main className="flex-grow pt-24">
+      {!isStudyPage && <Navbar />}
+      <main className={`flex-grow ${!isStudyPage ? 'pt-24' : ''}`}>
         <Suspense fallback={<LoadingFallback />}>
           <Outlet />
         </Suspense>
       </main>
-      <Footer />
+      {!isStudyPage && <Footer />}
     </div>
   );
 };
