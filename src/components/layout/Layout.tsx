@@ -18,7 +18,6 @@ const Layout = () => {
           <Outlet />
         </Suspense>
       </main>
-      {!isStudyPage && <Footer />}
     </div>
   );
 };

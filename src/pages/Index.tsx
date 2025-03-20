@@ -1,6 +1,8 @@
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Footer from '@/components/layout/Footer';
+
 import { 
   GraduationCap, 
   BookOpen, 
@@ -131,71 +133,9 @@ const Index = () => {
           })}
         </motion.div>
       </section>
-      
-      <section>
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold">Start Studying</h2>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="hover:shadow-md transition-shadow">
-            <CardHeader>
-              <CardTitle className="text-lg">Quick Practice</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">
-                Start a quick study session with random questions from your courses.
-              </p>
-            </CardContent>
-            <CardFooter>
-              <Button onClick={() => navigate('/questions')} className="w-full">
-                Start Practice
-              </Button>
-            </CardFooter>
-          </Card>
-          
-          <Card className="hover:shadow-md transition-shadow">
-            <CardHeader>
-              <CardTitle className="text-lg">Focus Mode</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">
-                Solve questions in a distraction-free environment with time tracking.
-              </p>
-            </CardContent>
-            <CardFooter>
-              <Button 
-                onClick={() => navigate('/questions')} 
-                variant="outline" 
-                className="w-full"
-              >
-                Enter Focus Mode
-              </Button>
-            </CardFooter>
-          </Card>
-          
-          <Card className="hover:shadow-md transition-shadow">
-            <CardHeader>
-              <CardTitle className="text-lg">Add New Question</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">
-                Create a new question to practice with specific topics or concepts.
-              </p>
-            </CardContent>
-            <CardFooter>
-              <Button 
-                onClick={() => navigate('/questions')} 
-                variant="secondary" 
-                className="w-full"
-              >
-                Add Question
-              </Button>
-            </CardFooter>
-          </Card>
-        </div>
-      </section>
+      <Footer />
     </div>
+    
   );
 };
 
