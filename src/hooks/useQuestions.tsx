@@ -30,16 +30,6 @@ const mockCourses: Course[] = [
     updatedAt: new Date('2023-04-15'),
     color: '#10B981',
     questionTypes: PROBABILITY_QUESTION_TYPES
-  },
-  {
-    id: 'databases',
-    name: 'Databases',
-    description: 'SQL, NoSQL, and database design principles',
-    questionCount: 6,
-    createdAt: new Date('2023-03-10'),
-    updatedAt: new Date('2023-04-20'),
-    color: '#F59E0B',
-    questionTypes: ['SQL Queries', 'Schema Design', 'Normalization', 'Indexing Strategies']
   }
 ];
 
@@ -72,18 +62,6 @@ const mockQuestions: Question[] = [
   },
   {
     id: 'q3',
-    title: 'SQL JOIN Query Optimization',
-    content: 'Write an optimized SQL query to join three tables: Users, Orders, and Products. Include proper indexing recommendations.',
-    difficulty: 'hard',
-    course: 'databases',
-    tags: ['sql', 'joins', 'optimization'],
-    questionTypes: ['SQL Queries', 'Indexing Strategies'],
-    createdAt: new Date('2023-03-20'),
-    updatedAt: new Date('2023-03-20'),
-    timeEstimate: 25
-  },
-  {
-    id: 'q4',
     title: 'Merge Sort Implementation',
     content: 'Implement the merge sort algorithm and discuss its advantages over other sorting methods.',
     difficulty: 'medium',
@@ -95,7 +73,7 @@ const mockQuestions: Question[] = [
     timeEstimate: 30
   },
   {
-    id: 'q5',
+    id: 'q4',
     title: 'Expected Value Calculation',
     content: 'A fair six-sided die is rolled twice. Let X be the random variable representing the sum of the two rolls. Calculate E[X].',
     difficulty: 'medium',
@@ -105,6 +83,18 @@ const mockQuestions: Question[] = [
     createdAt: new Date('2023-03-25'),
     updatedAt: new Date('2023-03-25'),
     timeEstimate: 20
+  },
+  {
+    id: 'q5',
+    title: 'Quicksort Analysis',
+    content: 'Analyze the time and space complexity of the Quicksort algorithm. When would you choose Quicksort over other sorting algorithms?',
+    difficulty: 'hard',
+    course: 'algorithms',
+    tags: ['sorting', 'complexity analysis', 'algorithms'],
+    questionTypes: ['Algorithm Analysis', 'Complexity Analysis', 'Algorithm Comparison'],
+    createdAt: new Date('2023-03-28'),
+    updatedAt: new Date('2023-03-28'),
+    timeEstimate: 25
   }
 ];
 

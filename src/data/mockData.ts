@@ -1,7 +1,6 @@
+import { Question, Course, QuestionAttempt, StudySession, StudyGoal, ALGORITHM_QUESTION_TYPES, PROBABILITY_QUESTION_TYPES } from '@/types';
 
-import { Question, Course, QuestionAttempt, StudySession, StudyGoal } from '@/types';
-
-// Sample courses
+// Sample courses - keeping only Algorithms and Probability
 export const courses: Course[] = [
   {
     id: '1',
@@ -10,30 +9,16 @@ export const courses: Course[] = [
     questionCount: 48,
     createdAt: new Date('2023-10-15'),
     updatedAt: new Date('2023-10-15'),
+    questionTypes: ALGORITHM_QUESTION_TYPES,
   },
   {
     id: '2',
-    name: 'Machine Learning',
-    description: 'Introduction to machine learning concepts and applications',
+    name: 'Probability',
+    description: 'Statistical concepts and probability theory',
     questionCount: 35,
     createdAt: new Date('2023-11-02'),
     updatedAt: new Date('2023-11-10'),
-  },
-  {
-    id: '3',
-    name: 'Web Development',
-    description: 'Modern web development techniques and frameworks',
-    questionCount: 42,
-    createdAt: new Date('2023-09-20'),
-    updatedAt: new Date('2023-09-28'),
-  },
-  {
-    id: '4',
-    name: 'Operating Systems',
-    description: 'Core concepts of operating systems and system programming',
-    questionCount: 30,
-    createdAt: new Date('2023-08-12'),
-    updatedAt: new Date('2023-08-15'),
+    questionTypes: PROBABILITY_QUESTION_TYPES,
   },
 ];
 
@@ -44,8 +29,9 @@ export const questions: Question[] = [
     title: 'Binary Search Implementation',
     content: 'Implement a binary search algorithm that finds the position of a target value within a sorted array.',
     difficulty: 'medium',
-    course: '1',
+    course: '1', // Algorithm course
     tags: ['algorithms', 'searching', 'arrays'],
+    questionTypes: ['Algorithm Design/Modification', 'Complexity Analysis'],
     createdAt: new Date('2023-10-16'),
     updatedAt: new Date('2023-10-16'),
     solution: 'function binarySearch(arr, target) {\n  let left = 0;\n  let right = arr.length - 1;\n  \n  while (left <= right) {\n    const mid = Math.floor((left + right) / 2);\n    \n    if (arr[mid] === target) {\n      return mid;\n    } else if (arr[mid] < target) {\n      left = mid + 1;\n    } else {\n      right = mid - 1;\n    }\n  }\n  \n  return -1;\n}',
@@ -61,8 +47,9 @@ export const questions: Question[] = [
     title: 'Graph Traversal: BFS',
     content: 'Implement a Breadth-First Search algorithm to traverse a graph represented as an adjacency list.',
     difficulty: 'hard',
-    course: '1',
+    course: '1', // Algorithm course
     tags: ['algorithms', 'graphs', 'traversal'],
+    questionTypes: ['Algorithm Design/Modification', 'Complexity Analysis', 'Efficient Implementation'],
     createdAt: new Date('2023-10-18'),
     updatedAt: new Date('2023-10-20'),
     solution: 'function bfs(graph, start) {\n  const visited = new Set();\n  const queue = [start];\n  visited.add(start);\n  \n  while (queue.length > 0) {\n    const vertex = queue.shift();\n    console.log(vertex);\n    \n    for (const neighbor of graph[vertex]) {\n      if (!visited.has(neighbor)) {\n        visited.add(neighbor);\n        queue.push(neighbor);\n      }\n    }\n  }\n}',
@@ -75,42 +62,48 @@ export const questions: Question[] = [
   },
   {
     id: '3',
-    title: 'Linear Regression Implementation',
-    content: 'Implement a simple linear regression model from scratch using gradient descent.',
-    difficulty: 'hard',
-    course: '2',
-    tags: ['machine learning', 'regression', 'optimization'],
+    title: 'Probability of Independent Events',
+    content: 'If P(A) = 0.3 and P(B) = 0.5, and A and B are independent events, calculate P(A and B) and P(A or B).',
+    difficulty: 'easy',
+    course: '2', // Probability course
+    tags: ['probability', 'independence', 'events'],
+    questionTypes: ['Axioms of probability', 'Conditional probability and independence'],
     createdAt: new Date('2023-11-05'),
     updatedAt: new Date('2023-11-05'),
-    solution: 'class LinearRegression {\n  constructor(learningRate = 0.01, iterations = 1000) {\n    this.learningRate = learningRate;\n    this.iterations = iterations;\n    this.weights = null;\n    this.bias = null;\n  }\n\n  fit(X, y) {\n    // Initialize parameters\n    const m = X.length;\n    this.weights = 0;\n    this.bias = 0;\n    \n    // Gradient descent\n    for (let i = 0; i < this.iterations; i++) {\n      // Predictions\n      const y_pred = X.map(x_i => this.weights * x_i + this.bias);\n      \n      // Compute gradients\n      let dw = 0;\n      let db = 0;\n      \n      for (let j = 0; j < m; j++) {\n        dw += -2 * X[j] * (y[j] - y_pred[j]);\n        db += -2 * (y[j] - y_pred[j]);\n      }\n      \n      dw /= m;\n      db /= m;\n      \n      // Update parameters\n      this.weights -= this.learningRate * dw;\n      this.bias -= this.learningRate * db;\n    }\n    \n    return this;\n  }\n\n  predict(X) {\n    return X.map(x_i => this.weights * x_i + this.bias);\n  }\n}',
+    timeEstimate: 15,
     hints: [
-      'Start by defining the linear model equation: y = wx + b',
-      'Compute the gradients of the loss function with respect to w and b',
-      'Update the parameters using the learning rate and gradients'
+      'For independent events, P(A and B) = P(A) × P(B)',
+      'For any two events, P(A or B) = P(A) + P(B) - P(A and B)'
     ],
-    timeEstimate: 30,
   },
   {
     id: '4',
-    title: 'React Component Lifecycle',
-    content: 'Explain the lifecycle methods of a React component and provide examples of when each should be used.',
+    title: 'Expected Value Calculation',
+    content: 'A fair six-sided die is rolled twice. Let X be the random variable representing the sum of the two rolls. Calculate E[X].',
     difficulty: 'medium',
-    course: '3',
-    tags: ['react', 'frontend', 'components'],
-    createdAt: new Date('2023-09-22'),
-    updatedAt: new Date('2023-09-22'),
+    course: '2', // Probability course
+    tags: ['expected value', 'random variables', 'discrete'],
+    questionTypes: ['Random variables', 'Properties of expectation'],
+    createdAt: new Date('2023-11-12'),
+    updatedAt: new Date('2023-11-12'),
     timeEstimate: 20,
+    hints: [
+      'The expected value is the weighted average of all possible outcomes',
+      'For the sum of independent random variables, E[X+Y] = E[X] + E[Y]',
+      'For a fair die, E[X] = (1+2+3+4+5+6)/6 = 3.5'
+    ],
   },
   {
     id: '5',
-    title: 'Process Scheduling Algorithms',
-    content: 'Implement and compare First-Come-First-Served (FCFS) and Shortest Job First (SJF) scheduling algorithms.',
-    difficulty: 'expert',
-    course: '4',
-    tags: ['operating systems', 'scheduling', 'algorithms'],
-    createdAt: new Date('2023-08-14'),
-    updatedAt: new Date('2023-08-16'),
-    timeEstimate: 45,
+    title: 'Time Complexity Analysis of Sorting Algorithms',
+    content: 'Analyze and compare the time complexity of Quicksort, Mergesort, and Heapsort algorithms in best, average, and worst cases.',
+    difficulty: 'hard',
+    course: '1', // Algorithm course
+    tags: ['algorithms', 'sorting', 'complexity'],
+    questionTypes: ['Complexity Analysis', 'Algorithm Comparison', 'Theoretical Analysis'],
+    createdAt: new Date('2023-10-25'),
+    updatedAt: new Date('2023-10-25'),
+    timeEstimate: 30,
   },
 ];
 
@@ -135,24 +128,6 @@ export const questionAttempts: QuestionAttempt[] = [
     notes: 'Struggled with keeping track of visited nodes, need to review graph traversal',
     distracted: true,
   },
-  {
-    id: '3',
-    questionId: '1',
-    startedAt: new Date('2023-10-28T16:20:00'),
-    completedAt: new Date('2023-10-28T16:32:00'),
-    duration: 720, // 12 minutes
-    success: true,
-    notes: 'Much faster implementation this time',
-  },
-  {
-    id: '4',
-    questionId: '3',
-    startedAt: new Date('2023-11-12T09:00:00'),
-    completedAt: new Date('2023-11-12T09:38:00'),
-    duration: 2280, // 38 minutes
-    success: true,
-    notes: 'Implemented correctly but took longer than expected',
-  },
 ];
 
 // Sample study sessions
@@ -166,26 +141,6 @@ export const studySessions: StudySession[] = [
     questions: ['1', '2'],
     attempts: [questionAttempts[0], questionAttempts[1]],
     isDistracted: false,
-  },
-  {
-    id: '2',
-    name: 'Algorithm Review',
-    startedAt: new Date('2023-10-28T16:00:00'),
-    endedAt: new Date('2023-10-28T17:00:00'),
-    duration: 3600, // 1 hour
-    questions: ['1'],
-    attempts: [questionAttempts[2]],
-    isDistracted: false,
-  },
-  {
-    id: '3',
-    name: 'ML Study Session',
-    startedAt: new Date('2023-11-12T09:00:00'),
-    endedAt: new Date('2023-11-12T10:30:00'),
-    duration: 5400, // 1.5 hours
-    questions: ['3'],
-    attempts: [questionAttempts[3]],
-    isDistracted: true,
   },
 ];
 
@@ -202,19 +157,10 @@ export const studyGoals: StudyGoal[] = [
   },
   {
     id: '2',
-    title: 'Complete ML Course',
+    title: 'Complete Probability Fundamentals',
     targetDate: new Date('2023-12-31'),
     questionCount: 35,
     completedCount: 8,
     courseId: '2',
-  },
-  {
-    id: '3',
-    title: 'React Advanced Concepts',
-    targetDate: new Date('2023-11-30'),
-    questionCount: 20,
-    completedCount: 15,
-    courseId: '3',
-    tags: ['react', 'hooks', 'performance'],
   },
 ];
