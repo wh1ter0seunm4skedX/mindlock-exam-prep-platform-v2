@@ -1,5 +1,4 @@
-
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 
 interface UseTimerOptions {
   initialTime?: number;
@@ -17,12 +16,12 @@ export function useTimer({
   const [isComplete, setIsComplete] = useState(false);
   const timerRef = useRef<number | null>(null);
   const startTimeRef = useRef<number | null>(null);
-  
-  // Clean up timer on unmount
+
+  // Cleanup timer on unmount
   useEffect(() => {
     return () => {
       if (timerRef.current) {
-        clearInterval(timerRef.current);
+        cancelAnimationFrame(timerRef.current);
       }
     };
   }, []);
@@ -30,56 +29,60 @@ export function useTimer({
   // Start timer
   const start = useCallback(() => {
     if (isRunning) return;
-    
+
     setIsRunning(true);
     setIsComplete(false);
-    startTimeRef.current = Date.now() - time * 1000; // account for already elapsed time
-    
-    timerRef.current = window.setInterval(() => {
-      if (startTimeRef.current === null) return;
-      
+    startTimeRef.current = Date.now() - time * 1000; // Adjust for elapsed time
+
+    const updateTimer = () => {
+      if (!startTimeRef.current) return;
+
       const elapsedSeconds = Math.floor((Date.now() - startTimeRef.current) / 1000);
       setTime(elapsedSeconds);
-      
+
       if (initialTime > 0 && elapsedSeconds >= initialTime) {
         setIsComplete(true);
         setIsRunning(false);
-        if (timerRef.current) clearInterval(timerRef.current);
         if (onComplete) onComplete();
+        return;
       }
-    }, 200);
+
+      timerRef.current = requestAnimationFrame(updateTimer);
+    };
+
+    timerRef.current = requestAnimationFrame(updateTimer);
   }, [initialTime, isRunning, onComplete, time]);
 
   // Pause timer
   const pause = useCallback(() => {
     if (!isRunning) return;
-    
+
     setIsRunning(false);
-    if (timerRef.current) clearInterval(timerRef.current);
+    if (timerRef.current) cancelAnimationFrame(timerRef.current);
   }, [isRunning]);
 
   // Reset timer
   const reset = useCallback(() => {
-    setTime(initialTime);
+    setTime(0); // Reset to 0 instead of initialTime to start fresh
     setIsRunning(false);
     setIsComplete(false);
-    
-    if (timerRef.current) clearInterval(timerRef.current);
-  }, [initialTime]);
+    startTimeRef.current = null; // Reset start time reference
+    if (timerRef.current) cancelAnimationFrame(timerRef.current);
+  }, []);
 
-  // Format time to display
-  const formattedTime = useCallback(() => {
+  // Format time
+  const formattedTime = useMemo(() => {
     const hours = Math.floor(time / 3600);
     const minutes = Math.floor((time % 3600) / 60);
     const seconds = time % 60;
-    
+
     return {
       hours,
       minutes,
       seconds,
-      formatted: `${hours.toString().padStart(2, '0')}:${minutes
+      formatted: `${hours.toString().padStart(2, "0")}:${minutes
         .toString()
-        .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`,
+        .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`,
     };
   }, [time]);
 
@@ -90,6 +93,6 @@ export function useTimer({
     start,
     pause,
     reset,
-    formattedTime: formattedTime(),
+    formattedTime,
   };
 }
