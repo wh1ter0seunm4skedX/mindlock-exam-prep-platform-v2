@@ -1,26 +1,4 @@
-import { Question, Course, QuestionAttempt, StudySession, StudyGoal, ALGORITHM_QUESTION_TYPES, PROBABILITY_QUESTION_TYPES } from '@/types';
-
-// Sample courses - keeping only Algorithms and Probability
-export const courses: Course[] = [
-  {
-    id: '1',
-    name: 'Data Structures & Algorithms',
-    description: 'Fundamental algorithms and data structures for computer science',
-    questionCount: 48,
-    createdAt: new Date('2023-10-15'),
-    updatedAt: new Date('2023-10-15'),
-    questionTypes: ALGORITHM_QUESTION_TYPES,
-  },
-  {
-    id: '2',
-    name: 'Probability',
-    description: 'Statistical concepts and probability theory',
-    questionCount: 35,
-    createdAt: new Date('2023-11-02'),
-    updatedAt: new Date('2023-11-10'),
-    questionTypes: PROBABILITY_QUESTION_TYPES,
-  },
-];
+import { Question, Course, ALGORITHM_QUESTION_TYPES, PROBABILITY_QUESTION_TYPES } from '@/types';
 
 // Sample questions
 export const questions: Question[] = [
@@ -29,138 +7,243 @@ export const questions: Question[] = [
     title: 'Binary Search Implementation',
     content: 'Implement a binary search algorithm that finds the position of a target value within a sorted array.',
     difficulty: 'medium',
-    course: '1', // Algorithm course
+    course: '1',
     tags: ['algorithms', 'searching', 'arrays'],
     questionTypes: ['Algorithm Design/Modification', 'Complexity Analysis'],
     createdAt: new Date('2023-10-16'),
     updatedAt: new Date('2023-10-16'),
-    solution: 'function binarySearch(arr, target) {\n  let left = 0;\n  let right = arr.length - 1;\n  \n  while (left <= right) {\n    const mid = Math.floor((left + right) / 2);\n    \n    if (arr[mid] === target) {\n      return mid;\n    } else if (arr[mid] < target) {\n      left = mid + 1;\n    } else {\n      right = mid - 1;\n    }\n  }\n  \n  return -1;\n}',
-    hints: [
-      'Think about dividing the array in half at each step',
-      'Consider what happens when the target is less than or greater than the middle element',
-      'Remember to handle the case when the target is not found'
-    ],
-    timeEstimate: 15,
   },
   {
     id: '2',
     title: 'Graph Traversal: BFS',
     content: 'Implement a Breadth-First Search algorithm to traverse a graph represented as an adjacency list.',
     difficulty: 'hard',
-    course: '1', // Algorithm course
+    course: '1',
     tags: ['algorithms', 'graphs', 'traversal'],
     questionTypes: ['Algorithm Design/Modification', 'Complexity Analysis', 'Efficient Implementation'],
     createdAt: new Date('2023-10-18'),
     updatedAt: new Date('2023-10-20'),
-    solution: 'function bfs(graph, start) {\n  const visited = new Set();\n  const queue = [start];\n  visited.add(start);\n  \n  while (queue.length > 0) {\n    const vertex = queue.shift();\n    console.log(vertex);\n    \n    for (const neighbor of graph[vertex]) {\n      if (!visited.has(neighbor)) {\n        visited.add(neighbor);\n        queue.push(neighbor);\n      }\n    }\n  }\n}',
-    hints: [
-      'Use a queue data structure to keep track of nodes to visit',
-      'Mark nodes as visited to avoid cycles',
-      'Process all neighbors of a node before moving to the next level'
-    ],
-    timeEstimate: 25,
   },
   {
     id: '3',
     title: 'Probability of Independent Events',
     content: 'If P(A) = 0.3 and P(B) = 0.5, and A and B are independent events, calculate P(A and B) and P(A or B).',
     difficulty: 'easy',
-    course: '2', // Probability course
+    course: '2', 
     tags: ['probability', 'independence', 'events'],
     questionTypes: ['Axioms of probability', 'Conditional probability and independence'],
     createdAt: new Date('2023-11-05'),
     updatedAt: new Date('2023-11-05'),
     timeEstimate: 15,
-    hints: [
-      'For independent events, P(A and B) = P(A) × P(B)',
-      'For any two events, P(A or B) = P(A) + P(B) - P(A and B)'
-    ],
   },
   {
     id: '4',
     title: 'Expected Value Calculation',
     content: 'A fair six-sided die is rolled twice. Let X be the random variable representing the sum of the two rolls. Calculate E[X].',
     difficulty: 'medium',
-    course: '2', // Probability course
+    course: '2',
     tags: ['expected value', 'random variables', 'discrete'],
     questionTypes: ['Random variables', 'Properties of expectation'],
     createdAt: new Date('2023-11-12'),
     updatedAt: new Date('2023-11-12'),
     timeEstimate: 20,
-    hints: [
-      'The expected value is the weighted average of all possible outcomes',
-      'For the sum of independent random variables, E[X+Y] = E[X] + E[Y]',
-      'For a fair die, E[X] = (1+2+3+4+5+6)/6 = 3.5'
-    ],
   },
   {
     id: '5',
     title: 'Time Complexity Analysis of Sorting Algorithms',
     content: 'Analyze and compare the time complexity of Quicksort, Mergesort, and Heapsort algorithms in best, average, and worst cases.',
     difficulty: 'hard',
-    course: '1', // Algorithm course
+    course: '1', 
     tags: ['algorithms', 'sorting', 'complexity'],
     questionTypes: ['Complexity Analysis', 'Algorithm Comparison', 'Theoretical Analysis'],
     createdAt: new Date('2023-10-25'),
     updatedAt: new Date('2023-10-25'),
-    timeEstimate: 30,
-  },
-];
-
-// Sample question attempts
-export const questionAttempts: QuestionAttempt[] = [
-  {
-    id: '1',
-    questionId: '1',
-    startedAt: new Date('2023-10-25T14:30:00'),
-    completedAt: new Date('2023-10-25T14:42:00'),
-    duration: 720, // 12 minutes
-    success: true,
-    notes: 'Implemented correctly on first try, but could optimize time complexity',
   },
   {
-    id: '2',
-    questionId: '2',
-    startedAt: new Date('2023-10-26T10:15:00'),
-    completedAt: new Date('2023-10-26T10:48:00'),
-    duration: 1980, // 33 minutes
-    success: false,
-    notes: 'Struggled with keeping track of visited nodes, need to review graph traversal',
-    distracted: true,
-  },
-];
-
-// Sample study sessions
-export const studySessions: StudySession[] = [
-  {
-    id: '1',
-    name: 'DSA Practice Session',
-    startedAt: new Date('2023-10-25T14:00:00'),
-    endedAt: new Date('2023-10-25T16:00:00'),
-    duration: 7200, // 2 hours
-    questions: ['1', '2'],
-    attempts: [questionAttempts[0], questionAttempts[1]],
-    isDistracted: false,
-  },
-];
-
-// Sample study goals
-export const studyGoals: StudyGoal[] = [
-  {
-    id: '1',
-    title: 'Master DSA Basics',
-    targetDate: new Date('2023-12-15'),
-    questionCount: 30,
-    completedCount: 12,
-    courseId: '1',
+    id: '6',
+    title: 'Implement a Hash Table',
+    content: 'Implement a hash table with collision resolution using separate chaining.',
     difficulty: 'medium',
+    course: '1', // Algorithm course
+    tags: ['algorithms', 'data structures', 'hash table'],
+    questionTypes: ['Algorithm Design/Modification', 'Efficient Implementation'],
+    createdAt: new Date('2024-03-20'),
+    updatedAt: new Date('2024-03-20'),
+  },
+  {
+    id: '7',
+    title: 'Detect Cycle in a Directed Graph',
+    content: 'Given a directed graph, determine if there is a cycle in the graph.',
+    difficulty: 'hard',
+    course: '1', // Algorithm course
+    tags: ['algorithms', 'graphs', 'cycle detection'],
+    questionTypes: ['Algorithm Design/Modification', 'Theoretical Analysis'],
+    createdAt: new Date('2024-03-20'),
+    updatedAt: new Date('2024-03-20'),
+  },
+  {
+    id: '8',
+    title: 'Find the Median of Two Sorted Arrays',
+    content: 'Given two sorted arrays, find the median of the combined sorted array.',
+    difficulty: 'hard',
+    course: '1', // Algorithm course
+    tags: ['algorithms', 'arrays', 'median'],
+    questionTypes: ['Algorithm Design/Modification', 'Complexity Analysis', 'Optimization'],
+    createdAt: new Date('2024-03-20'),
+    updatedAt: new Date('2024-03-20'),
+  },
+  {
+    id: '9',
+    title: 'Calculate Conditional Probability',
+    content: 'Given that a person tests positive for a disease, calculate the probability that they actually have the disease, given the sensitivity and specificity of the test.',
+    difficulty: 'medium',
+    course: '2', // Probability course
+    tags: ['probability', 'conditional probability', 'bayes theorem'],
+    questionTypes: ['Conditional probability and independence'],
+    createdAt: new Date('2024-03-20'),
+    updatedAt: new Date('2024-03-20'),
+  },
+  {
+    id: '10',
+    title: 'Determine Probability Density Function',
+    content: 'Determine the probability density function (PDF) of a continuous random variable given its cumulative distribution function (CDF).',
+    difficulty: 'hard',
+    course: '2', // Probability course
+    tags: ['probability', 'continuous random variables', 'pdf', 'cdf'],
+    questionTypes: ['Continuous random variables'],
+    createdAt: new Date('2024-03-20'),
+    updatedAt: new Date('2024-03-20'),
+  },
+  {
+    id: '11',
+    title: 'Implement Dijkstra\'s Algorithm',
+    content: 'Implement Dijkstra\'s algorithm to find the shortest path from a source node to all other nodes in a weighted graph.',
+    difficulty: 'hard',
+    course: '1', // Algorithm course
+    tags: ['algorithms', 'graphs', 'shortest path'],
+    questionTypes: ['Algorithm Design/Modification', 'Efficient Implementation'],
+    createdAt: new Date('2024-03-21'),
+    updatedAt: new Date('2024-03-21'),
+  },
+  {
+    id: '12',
+    title: 'Reverse a Linked List',
+    content: 'Write a function to reverse a singly linked list.',
+    difficulty: 'easy',
+    course: '1', // Algorithm course
+    tags: ['algorithms', 'linked list', 'recursion'],
+    questionTypes: ['Algorithm Design/Modification', 'Data Structures'],
+    createdAt: new Date('2024-03-21'),
+    updatedAt: new Date('2024-03-21'),
+  },
+  {
+    id: '13',
+    title: 'Implement a Queue using Two Stacks',
+    content: 'Implement a queue data structure using two stacks.',
+    difficulty: 'medium',
+    course: '1', // Algorithm course
+    tags: ['algorithms', 'data structures', 'stacks', 'queues'],
+    questionTypes: ['Algorithm Design/Modification', 'Efficient Implementation'],
+    createdAt: new Date('2024-03-21'),
+    updatedAt: new Date('2024-03-21'),
+  },
+  {
+    id: '14',
+    title: 'Find the Kth Largest Element in an Array',
+    content: 'Find the kth largest element in an unsorted array.',
+    difficulty: 'medium',
+    course: '1', // Algorithm course
+    tags: ['algorithms', 'arrays', 'sorting'],
+    questionTypes: ['Algorithm Design/Modification', 'Efficient Implementation'],
+    createdAt: new Date('2024-03-21'),
+    updatedAt: new Date('2024-03-21'),
+  },
+  {
+    id: '15',
+    title: 'Implement a Trie (Prefix Tree)',
+    content: 'Implement a trie (prefix tree) data structure.',
+    difficulty: 'medium',
+    course: '1', // Algorithm course
+    tags: ['algorithms', 'data structures', 'trie'],
+    questionTypes: ['Algorithm Design/Modification', 'Efficient Implementation'],
+    createdAt: new Date('2024-03-21'),
+    updatedAt: new Date('2024-03-21'),
+  },
+  {
+    id: '16',
+    title: 'Calculate the Probability of Rolling a Specific Sum with Multiple Dice',
+    content: 'Calculate the probability of rolling a specific sum with a given number of dice.',
+    difficulty: 'medium',
+    course: '2', // Probability course
+    tags: ['probability', 'discrete probability', 'dice'],
+    questionTypes: ['Combinatorial analysis', 'Axioms of probability'],
+    createdAt: new Date('2024-03-21'),
+    updatedAt: new Date('2024-03-21'),
+  },
+  {
+    id: '17',
+    title: 'Determine the Probability of Drawing Specific Cards from a Deck',
+    content: 'Determine the probability of drawing a specific set of cards from a standard deck of cards.',
+    difficulty: 'medium',
+    course: '2', // Probability course
+    tags: ['probability', 'combinatorial analysis', 'cards'],
+    questionTypes: ['Combinatorial analysis', 'Axioms of probability'],
+    createdAt: new Date('2024-03-21'),
+    updatedAt: new Date('2024-03-21'),
+  },
+  {
+    id: '18',
+    title: 'Calculate the Expected Value of a Lottery Ticket',
+    content: 'Calculate the expected value of a lottery ticket given the probabilities and payouts of different winning scenarios.',
+    difficulty: 'medium',
+    course: '2', // Probability course
+    tags: ['probability', 'expected value', 'lottery'],
+    questionTypes: ['Random variables', 'Properties of expectation'],
+    createdAt: new Date('2024-03-21'),
+    updatedAt: new Date('2024-03-21'),
+  },
+  {
+    id: '19',
+    title: 'Determine the Probability of a Series of Events',
+    content: 'Determine the probability of a series of dependent events occurring in a specific order.',
+    difficulty: 'medium',
+    course: '2', // Probability course
+    tags: ['probability', 'dependent events', 'series'],
+    questionTypes: ['Conditional probability and independence'],
+    createdAt: new Date('2024-03-21'),
+    updatedAt: new Date('2024-03-21'),
+  },
+  {
+    id: '20',
+    title: 'Calculate the Probability of a Specific Outcome in a Binomial Distribution',
+    content: 'Calculate the probability of a specific number of successes in a binomial distribution.',
+    difficulty: 'medium',
+    course: '2', // Probability course
+    tags: ['probability', 'binomial distribution', 'statistics'],
+    questionTypes: ['Random variables', 'Discrete random variables'],
+    createdAt: new Date('2024-03-21'),
+    updatedAt: new Date('2024-03-21'),
+  },
+];
+
+// Sample courses - keeping only Algorithms and Probability
+export const courses: Course[] = [
+  {
+    id: '1',
+    name: 'Algorithms',
+    description: 'Design, prove correctness, and analyze algorithms for various problems. Learn about complexity analysis, reductions, and optimization techniques.',
+    questionCount: questions.filter(question => question.course === '1').length,
+    createdAt: new Date('2023-10-15'),
+    updatedAt: new Date('2023-10-15'),
+    questionTypes: ALGORITHM_QUESTION_TYPES,
   },
   {
     id: '2',
-    title: 'Complete Probability Fundamentals',
-    targetDate: new Date('2023-12-31'),
-    questionCount: 35,
-    completedCount: 8,
-    courseId: '2',
+    name: 'Probability',
+    description: 'Understand the fundamentals of probability theory, including axioms, conditional probability, independence, and random variables.',
+    questionCount: questions.filter(question => question.course === '2').length,
+    createdAt: new Date('2023-11-02'),
+    updatedAt: new Date('2023-11-10'),
+    questionTypes: PROBABILITY_QUESTION_TYPES,
   },
 ];

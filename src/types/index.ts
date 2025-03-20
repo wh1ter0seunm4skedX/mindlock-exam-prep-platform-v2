@@ -3,7 +3,7 @@ export interface Question {
   id: string;
   title: string;
   content: string;
-  difficulty: 'easy' | 'medium' | 'hard' | 'expert';
+  difficulty: 'easy' | 'medium' | 'hard';
   course: string;
   tags: string[];
   questionTypes: string[];
@@ -40,38 +40,6 @@ export interface Course {
   questionTypes: string[]; // Available question types for this course
 }
 
-export interface StudySession {
-  id: string;
-  name?: string;
-  startedAt: Date;
-  endedAt?: Date;
-  duration?: number; // in seconds
-  questions: string[]; // question IDs
-  attempts: QuestionAttempt[];
-  isDistracted: boolean;
-}
-
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  createdAt: Date;
-  studySessions: StudySession[];
-  courses: Course[];
-  questions: Question[];
-}
-
-export interface StudyGoal {
-  id: string;
-  title: string;
-  targetDate: Date;
-  questionCount: number;
-  completedCount: number;
-  courseId?: string;
-  tags?: string[];
-  difficulty?: 'easy' | 'medium' | 'hard' | 'expert';
-}
-
 // Question type definitions for different courses
 export const ALGORITHM_QUESTION_TYPES = [
   'Algorithm Design/Modification',
@@ -101,5 +69,4 @@ export const PROBABILITY_QUESTION_TYPES = [
 export const COURSE_QUESTION_TYPES: Record<string, string[]> = {
   'algorithms': ALGORITHM_QUESTION_TYPES,
   'probability': PROBABILITY_QUESTION_TYPES,
-  // Add more courses as needed
 };
