@@ -49,9 +49,6 @@ const Dashboard = () => {
       <section className="mb-16">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold">My Courses</h2>
-          <Button onClick={() => navigate('/questions')}>
-            Browse All Questions
-          </Button>
         </div>
         
         <motion.div 

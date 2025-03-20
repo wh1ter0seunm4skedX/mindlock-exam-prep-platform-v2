@@ -5,6 +5,7 @@ import { Menu, X, Book, Home, BookOpen, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useIsMobile } from '@/hooks/use-mobile';
+import StudyModal from '@/components/StudyModal';
 
 const Navbar = () => {
   const location = useLocation();
@@ -19,6 +20,7 @@ const Navbar = () => {
   const routes = [
     { path: '/', label: 'Home', icon: Home },
     { path: '/questions', label: 'Questions', icon: Book },
+    { path: '/study', label: 'Study', icon: Book },
   ];
 
   return (
