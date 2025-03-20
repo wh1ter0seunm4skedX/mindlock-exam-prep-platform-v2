@@ -23,7 +23,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useQuestions } from '@/hooks/useQuestions';
 
-const Index = () => {
+const Dashboard = () => {
   const navigate = useNavigate();
   const { courses, allQuestions } = useQuestions();
   
@@ -45,17 +45,10 @@ const Index = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold mb-3">Welcome to MindLock</h1>
-        <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-          Your dedicated platform for distraction-free practice and mastery of 
-          complex academic subjects
-        </p>
-      </div>
       
       <section className="mb-16">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold">Your Courses</h2>
+          <h2 className="text-2xl font-bold">My Courses</h2>
           <Button onClick={() => navigate('/questions')}>
             Browse All Questions
           </Button>
@@ -139,4 +132,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Dashboard;
