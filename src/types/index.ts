@@ -12,21 +12,8 @@ export interface Question {
   solution?: string;
   hints?: string[];
   timeEstimate?: number; // in minutes
-  attempts?: QuestionAttempt[];
   imageUrl?: string; // Added for image support
   userAnswer?: string; // Added to store user answers in focus mode
-}
-
-export interface QuestionAttempt {
-  id: string;
-  questionId: string;
-  startedAt: Date;
-  completedAt?: Date;
-  duration?: number; // in seconds
-  success: boolean;
-  notes?: string;
-  distracted?: boolean;
-  userAnswer?: string; // Added to store user answers
 }
 
 export interface Course {

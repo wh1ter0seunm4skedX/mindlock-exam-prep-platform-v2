@@ -4,7 +4,7 @@ import { questions as mockQuestions, courses as mockCourses } from '@/data/mockD
 
 interface UseQuestionsOptions {
   courseId?: string;
-  difficulty?: 'easy' | 'medium' | 'hard' | 'expert';
+  difficulty?: 'easy' | 'medium' | 'hard';
   tags?: string[];
   searchQuery?: string;
 }

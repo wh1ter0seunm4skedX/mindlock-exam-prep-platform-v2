@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { useQuestions } from "@/hooks/useQuestions";
+import { useFirebaseQuestions } from "@/hooks/useFirebaseQuestions";
 import {
   Select,
   SelectContent,
@@ -80,7 +80,7 @@ const Questions = () => {
     loading,
     error,
     deleteQuestion,
-  } = useQuestions({
+  } = useFirebaseQuestions({
     courseId: selectedCourse || undefined,
     difficulty: (selectedDifficulty as any) || undefined,
     searchQuery: searchQuery || undefined,

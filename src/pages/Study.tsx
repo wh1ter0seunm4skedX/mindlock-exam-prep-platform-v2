@@ -3,10 +3,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Clock, Save, Send, Book, CheckCircle, Timer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { useQuestions } from '@/hooks/useQuestions';
 import { Question } from '@/types';
 import { useTimer } from '@/hooks/useTimer';
 import {
@@ -18,16 +17,18 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { motion } from 'framer-motion';
+import { useFirebaseQuestions } from '@/hooks/useFirebaseQuestions';
 
 const Study = () => {
   const { questionId } = useParams<{ questionId: string }>();
   const navigate = useNavigate();
   const [userAnswer, setUserAnswer] = useState('');
   const [saveStatus, setSaveStatus] = useState('');
-  const { allQuestions, updateQuestion, courses } = useQuestions();
   const [question, setQuestion] = useState<Question | null>(null);
   const [isExamMode] = useState<boolean>(false);
   const [showTimerDialog, setShowTimerDialog] = useState(false);
+  const { getQuestionById, updateQuestion, courses } = useFirebaseQuestions();
+  const [loading, setLoading] = useState(true);
 
   const {
     time,
@@ -39,19 +40,32 @@ const Study = () => {
   } = useTimer({ autoStart: true });
 
   useEffect(() => {
-    if (questionId && allQuestions.length > 0) {
-      const foundQuestion = allQuestions.find(q => q.id === questionId);
-      if (foundQuestion) {
-        setQuestion(foundQuestion);
-        if (foundQuestion.userAnswer) {
-          setUserAnswer(foundQuestion.userAnswer);
+    const fetchQuestion = async () => {
+      if (!questionId) return;
+
+      try {
+        setLoading(true);
+        const fetchedQuestion = await getQuestionById(questionId);
+        
+        if (fetchedQuestion) {
+          setQuestion(fetchedQuestion);
+          if (fetchedQuestion.userAnswer) {
+            setUserAnswer(fetchedQuestion.userAnswer);
+          }
+        } else {
+          toast.error('Question not found');
+          navigate('/questions');
         }
-      } else {
-        toast.error('Question not found');
-        navigate('/questions');
+      } catch (error) {
+        console.error('Error fetching question:', error);
+        toast.error('Failed to load question');
+      } finally {
+        setLoading(false);
       }
-    }
-  }, [questionId, allQuestions, navigate]);
+    };
+
+    fetchQuestion();
+  }, [questionId, getQuestionById, navigate]);
 
   const courseName = useMemo(() => {
     return question
@@ -108,15 +122,12 @@ const Study = () => {
     setShowTimerDialog(!showTimerDialog);
   };
 
+  if (loading) {
+    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+  }
+
   if (!question) {
-    return (
-      <div className="container mx-auto min-h-screen flex items-center justify-center">
-        <div className="animate-pulse flex flex-col items-center gap-4">
-          <div className="h-12 w-12 rounded-full bg-muted"></div>
-          <div className="h-4 w-24 rounded bg-muted"></div>
-        </div>
-      </div>
-    );
+    return <div className="flex items-center justify-center min-h-screen">Question not found</div>;
   }
 
   return (
@@ -235,29 +246,27 @@ const Study = () => {
           </DialogHeader>
           <div className="py-4 text-center">
             <p className="text-4xl font-mono font-bold mb-4">
-              {formattedTime.hours > 0 && `${formattedTime.hours}:`}
-              {formattedTime.minutes.toString().padStart(2, '0')}:
-              {formattedTime.seconds.toString().padStart(2, '0')}
+              {formattedTime.hours > 0
+                ? `${formattedTime.hours}:${formattedTime.minutes.toString().padStart(2, '0')}:${formattedTime.seconds.toString().padStart(2, '0')}`
+                : `${formattedTime.minutes}:${formattedTime.seconds.toString().padStart(2, '0')}`}
             </p>
-            <div className="flex justify-center gap-2">
-              {isRunning ? (
-                <Button variant="outline" onClick={pauseTimer}>Pause</Button>
-              ) : (
-                <Button onClick={startTimer}>Resume</Button>
-              )}
-              <Button variant="outline" onClick={resetTimer}>Reset</Button>
+            <div className="flex justify-center gap-4">
+              <Button
+                variant="outline"
+                onClick={isRunning ? pauseTimer : startTimer}
+                className="flex items-center gap-2"
+              >
+                {isRunning ? 'Pause' : 'Resume'}
+              </Button>
+              <Button
+                variant="outline"
+                onClick={resetTimer}
+                className="flex items-center gap-2"
+              >
+                Reset
+              </Button>
             </div>
-            {question.timeEstimate && (
-              <div className="mt-4 text-sm text-muted-foreground">
-                Estimated time: {question.timeEstimate} minutes
-              </div>
-            )}
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowTimerDialog(false)}>
-              Close
-            </Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
