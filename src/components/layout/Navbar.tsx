@@ -8,6 +8,7 @@ import {
   BookOpen,
   Settings,
   Clock,
+  Shield,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -27,6 +28,7 @@ const Navbar = () => {
   const routes = [
     { path: "/", label: "Home", icon: Home },
     { path: "/questions", label: "Questions", icon: Book },
+    { path: "/admin", label: "Admin Panel", icon: Shield },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -110,6 +112,16 @@ const Navbar = () => {
             >
               <Clock className="h-5 w-5" />
               Exam Mode
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full text-lg justify-start py-4 flex items-center gap-3 hover:bg-primary/10 transition-all"
+              asChild
+            >
+              <Link to="/admin">
+                <Shield className="h-5 w-5" />
+                Admin Panel
+              </Link>
             </Button>
           </nav>
         </div>
