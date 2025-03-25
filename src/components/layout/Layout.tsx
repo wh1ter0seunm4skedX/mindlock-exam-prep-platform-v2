@@ -12,12 +12,12 @@ const Layout = () => {
   return (
     <div className="flex flex-col min-h-screen">
       {!isStudyPage && <Navbar />}
-      <main className={`flex-grow ${!isStudyPage ? "pt-20" : ""} transition-all`}>
+      <main className={`flex-grow ${!isStudyPage ? "pt-24" : ""} transition-all`}>
         <Suspense fallback={<LoadingFallback />}>
           <Outlet />
         </Suspense>
       </main>
-      {!isStudyPage}
+      {!isStudyPage && <Footer />}
     </div>
   );
 };
