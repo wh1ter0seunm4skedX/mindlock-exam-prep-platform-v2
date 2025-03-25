@@ -6,6 +6,7 @@ import Dashboard from '@/pages/Dashboard';
 import Questions from '@/pages/Questions';
 import Study from '@/pages/Study';
 import Admin from '@/pages/Admin';
+import Exam from '@/pages/Exam';
 import '@/lib/firebase'; // Import Firebase initialization
 
 // Create a client
@@ -22,6 +23,7 @@ function App() {
             <Route path="/questions" element={<Questions />} />
             <Route path="/study/:questionId" element={<Study />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/exam" element={<Exam />} />
           </Routes>
           <Toaster />
         </div>

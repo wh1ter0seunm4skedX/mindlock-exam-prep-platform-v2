@@ -11,7 +11,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -27,15 +26,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useQuestions } from '@/hooks/useQuestions';
+import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { useQuestions } from '@/hooks/useQuestions';
 
-interface StudyModalProps {
+interface ExamConfigModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const StudyModal: React.FC<StudyModalProps> = ({ isOpen, onClose }) => {
+const ExamConfigModal: React.FC<ExamConfigModalProps> = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const [selectedCourse, setSelectedCourse] = useState<string>('');
   const [randomQuestions, setRandomQuestions] = useState<boolean>(false);
@@ -44,7 +44,7 @@ const StudyModal: React.FC<StudyModalProps> = ({ isOpen, onClose }) => {
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
   const { courses } = useQuestions();
 
-  const handleSubmit = () => {
+  const handleStartExam = () => {
     if (!selectedCourse || !selectedDifficulty || !selectedDuration) {
       alert("Please select course, difficulty and duration.");
       return;
@@ -73,7 +73,7 @@ const StudyModal: React.FC<StudyModalProps> = ({ isOpen, onClose }) => {
         <AlertDialogHeader>
           <AlertDialogTitle>Configure Exam Session</AlertDialogTitle>
           <AlertDialogDescription>
-            Select course, difficulty, duration, and optionally topics. Enable random mode for shuffled questions.
+            Select your exam preferences below. This will start a timed session with questions matching your criteria.
           </AlertDialogDescription>
         </AlertDialogHeader>
 
@@ -182,11 +182,11 @@ const StudyModal: React.FC<StudyModalProps> = ({ isOpen, onClose }) => {
 
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleSubmit}>Continue</AlertDialogAction>
+          <AlertDialogAction onClick={handleStartExam}>Start Exam</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
   );
 };
 
-export default StudyModal;
+export default ExamConfigModal; 

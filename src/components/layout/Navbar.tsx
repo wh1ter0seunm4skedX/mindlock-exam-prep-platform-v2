@@ -8,7 +8,7 @@ import {
   Shield,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import StudyModal from "@/components/StudyModal";
+import ExamConfigModal from "@/components/exam/ExamConfigModal";
 
 const Navbar = () => {
   const location = useLocation();
@@ -67,7 +67,7 @@ const Navbar = () => {
 
 
       {/* Exam Mode Modal */}
-      <StudyModal isOpen={examModeOpen} onClose={() => setExamModeOpen(false)} />
+      <ExamConfigModal isOpen={examModeOpen} onClose={() => setExamModeOpen(false)} />
     </header>
   );
 };

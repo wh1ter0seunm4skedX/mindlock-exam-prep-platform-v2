@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Clock, Save, Send, Book, CheckCircle, Timer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { Question } from '@/types';
@@ -19,13 +19,12 @@ import {
 import { motion } from 'framer-motion';
 import { useFirebaseQuestions } from '@/hooks/useFirebaseQuestions';
 
-const Study = () => {
+const QuestionStudy = () => {
   const { questionId } = useParams<{ questionId: string }>();
   const navigate = useNavigate();
   const [userAnswer, setUserAnswer] = useState('');
   const [saveStatus, setSaveStatus] = useState('');
   const [question, setQuestion] = useState<Question | null>(null);
-  const [isExamMode] = useState<boolean>(false);
   const [showTimerDialog, setShowTimerDialog] = useState(false);
   const { getQuestionById, updateQuestion, courses } = useFirebaseQuestions();
   const [loading, setLoading] = useState(true);
@@ -118,10 +117,6 @@ const Study = () => {
     navigate('/questions');
   };
 
-  const toggleTimerDialog = () => {
-    setShowTimerDialog(!showTimerDialog);
-  };
-
   if (loading) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
   }
@@ -143,8 +138,8 @@ const Study = () => {
             variant="outline"
             size="sm"
             className="flex items-center gap-2"
-            onClick={toggleTimerDialog}
-            aria-label="Open study timer"
+            onClick={() => setShowTimerDialog(true)}
+            aria-label="Study timer"
           >
             <Timer className="h-4 w-4" />
             {formattedTime.hours > 0
@@ -273,4 +268,4 @@ const Study = () => {
   );
 };
 
-export default Study;
+export default QuestionStudy;
