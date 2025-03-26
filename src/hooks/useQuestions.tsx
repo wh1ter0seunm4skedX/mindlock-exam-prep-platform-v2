@@ -1,6 +1,6 @@
-import { useState, useEffect, useMemo } from 'react';
-import { Question, Course, ALGORITHM_QUESTION_TYPES, PROBABILITY_QUESTION_TYPES } from '@/types';
-import { questions as mockQuestions, courses as mockCourses } from '@/data/mockData';
+import { useFirebaseQuestions } from './useFirebaseQuestions';
+import { Question, Course } from '@/types';
+import { useMemo } from 'react';
 
 interface UseQuestionsOptions {
   courseId?: string;
@@ -10,10 +10,7 @@ interface UseQuestionsOptions {
 }
 
 export function useQuestions(options: UseQuestionsOptions = {}) {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-  const [questions, setQuestions] = useState<Question[]>(mockQuestions);
-  const [courses, setCourses] = useState<Course[]>(mockCourses);
+  const { questions, courses, loading, error, addQuestion: addFirebaseQuestion, updateQuestion: updateFirebaseQuestion, deleteQuestion: deleteFirebaseQuestion, addCourse: addFirebaseCourse } = useFirebaseQuestions(options);
 
   const { courseId, difficulty, tags, searchQuery } = options;
 
@@ -55,97 +52,39 @@ export function useQuestions(options: UseQuestionsOptions = {}) {
 
   const addQuestion = async (newQuestion: Omit<Question, 'id' | 'createdAt' | 'updatedAt'>) => {
     try {
-      const question: Question = {
-        ...newQuestion,
-        id: Date.now().toString(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        questionTypes: newQuestion.questionTypes || [],
-        imageUrl: newQuestion.imageUrl || null,
-      };
-      
-      setQuestions(prev => [...prev, question]);
-      
-      // Update question count in the course
-      setCourses(prev => 
-        prev.map(course => 
-          course.id === question.course 
-            ? { ...course, questionCount: course.questionCount + 1 } 
-            : course
-        )
-      );
-
-      return question;
+      return await addFirebaseQuestion(newQuestion);
     } catch (err) {
-      setError(err as Error);
       throw err;
     }
   };
 
   const updateQuestion = async (id: string, updates: Partial<Question>) => {
     try {
-      setQuestions(prev => 
-        prev.map(question => 
-          question.id === id 
-            ? { ...question, ...updates, updatedAt: new Date() } 
-            : question
-        )
-      );
-      
-      const updatedQuestion = questions.find(q => q.id === id);
-      return updatedQuestion;
+      return await updateFirebaseQuestion(id, updates);
     } catch (err) {
-      setError(err as Error);
       throw err;
     }
   };
 
   const deleteQuestion = async (id: string) => {
     try {
-      const questionToDelete = questions.find(q => q.id === id);
-      if (!questionToDelete) throw new Error('Question not found');
-      
-      setQuestions(prev => prev.filter(question => question.id !== id));
-      
-      // Update question count in the course
-      setCourses(prev => 
-        prev.map(course => 
-          course.id === questionToDelete.course 
-            ? { ...course, questionCount: course.questionCount - 1 } 
-            : course
-        )
-      );
-      
-      return true;
+      return await deleteFirebaseQuestion(id);
     } catch (err) {
-      setError(err as Error);
       throw err;
     }
   };
 
   const addCourse = async (newCourse: Omit<Course, 'id' | 'createdAt' | 'updatedAt' | 'questionCount'>) => {
     try {
-      const course: Course = {
-        ...newCourse,
-        id: Date.now().toString(),
-        questionCount: 0,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        questionTypes: newCourse.questionTypes || []
-      };
-      
-      setCourses(prev => [...prev, course]);
-      
-      return course;
+      return await addFirebaseCourse(newCourse);
     } catch (err) {
-      setError(err as Error);
       throw err;
     }
   };
 
   return {
     questions: filteredQuestions,
-    allQuestions: questions, // Unfiltered questions
+    allQuestions: questions,
     courses,
     loading,
     error,
