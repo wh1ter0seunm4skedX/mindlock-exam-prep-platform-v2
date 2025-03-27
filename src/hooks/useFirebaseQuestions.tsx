@@ -197,6 +197,35 @@ export const useFirebaseQuestions = (options: UseFirebaseQuestionsOptions = {}) 
     }
   };
 
+  const updateCourse = async (id: string, updates: Partial<Course>) => {
+    try {
+      const courseRef = doc(db, 'courses', id);
+      await updateDoc(courseRef, {
+        ...updates,
+        updatedAt: Timestamp.now(),
+      });
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  const deleteCourse = async (id: string) => {
+    try {
+      // Check if there are any questions associated with this course
+      const questionsQuery = query(collection(db, 'questions'), where('course', '==', id));
+      const questionSnapshot = await getDocs(questionsQuery);
+      
+      if (!questionSnapshot.empty) {
+        throw new Error('Cannot delete course with existing questions. Delete the questions first.');
+      }
+      
+      const courseRef = doc(db, 'courses', id);
+      await deleteDoc(courseRef);
+    } catch (err) {
+      throw err;
+    }
+  };
+
   return {
     questions,
     courses,
@@ -206,6 +235,8 @@ export const useFirebaseQuestions = (options: UseFirebaseQuestionsOptions = {}) 
     updateQuestion,
     deleteQuestion,
     addCourse,
+    updateCourse,
+    deleteCourse,
     getQuestionById,
   };
-}; 
+};
